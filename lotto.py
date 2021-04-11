@@ -2,19 +2,6 @@ from random import *
 import sys
 from time import sleep as delay_time
 
-
-class NotSixError(Exception):
-    pass
-
-
-class RepeatedNumberError(Exception):
-    pass
-
-
-lotto_nums = [i+1 for i in range(45)]
-lotto_prize = {1: 1400000000, 2: 1200000, 3: 50000, 4: 5000} #등수별 상금
-lotto_score = {1: 6, 2: 5, 3: 4, 4: 3} #등수별 맞춘 갯수
-
 PRINTER_MONEY_INPUT_ERROR_MESSAGE = "ERROR: 숫자만 입력해주세요."
 PRINTER_MONEY_INPUT_MESSAGE = "> 구입금액을 입력해주세요."
 PRINTER_NOMONEY_MESSAGE = "ERROR: 적어도 1000원 이상 입력해주세요."
@@ -22,6 +9,18 @@ PRINTER_PLEASE_INPUT_WINNER_MESSAGE = '\n> 지난주 당첨 번호를 입력해�
 PRINTER_LOTTO_NEEDS_SIX = "ERROR: 로또는 6개의 숫자로 이루어져 있습니다."
 PRINTER_LOTTO_INPUT_ERROR_MESSAGE = "ERROR: 로또 숫자는 1 이상 45 이하의 정수입니다."
 PRINTER_REPEATED_NUMBER_ERROR_MESSAGE = "ERROR: 로또 숫자는 중복될 수 없습니다."
+
+lotto_nums = [i+1 for i in range(45)]
+lotto_prize = {1: 1400000000, 2: 1200000, 3: 50000, 4: 5000} #등수별 상금
+lotto_score = {1: 6, 2: 5, 3: 4, 4: 3} #등수별 맞춘 갯수
+
+
+class NotSixError(Exception):
+    pass
+
+
+class RepeatedNumberError(Exception):
+    pass
 
 
 def printer_space():
@@ -57,7 +56,7 @@ def buy_lotto():
             if lotto_bought_number >= 1:
                 return lotto_bought_number
             else:
-                printer_nomoney()
+                printer_no_money()
                 continue
         except:
             printer_money_input_error()
@@ -73,9 +72,12 @@ def printer_lotto_bought(lotto_bought_number):
 
 def pick_lotto_number(lotto_bought_number):
     lotto_bought_list = []
-    for counter in range(lotto_bought_number): # 이럴 때 counter처럼 사용되지 않을 변수명은 뭐로 하는게 일반적인가요?
+
+    # 이럴 때 counter 처럼 사용되지 않을 변수명은 뭐로 하는게 일반적인가요?
+    for counter in range(lotto_bought_number):
         new_lotto_pick = sample(lotto_nums, 6)
         lotto_bought_list.append(sorted(new_lotto_pick))
+
     return lotto_bought_list
 
 
@@ -104,7 +106,9 @@ def get_random_winning_number():
     return random_winning_number
 
 
-def get_winning_number():  # 이렇게 오류 만들어서 예외처리 하는 건 장기적으로 안 좋을까요?
+def get_winning_number():
+    # 이렇게 오류 만들어서 예외처리 하는 건 장기적으로 안 좋을까요?
+
     while True:
         try:
             printer_please_input_winner()
@@ -112,23 +116,25 @@ def get_winning_number():  # 이렇게 오류 만들어서 예외처리 하는 �
             if inputted_line == "r" or inputted_line == "R":  # 당첨번호 자동추첨하기
                 return get_random_winning_number()
             winning_number = list(map(int, inputted_line.split(',')))
-            if len(winning_number) != 6:  
+            if len(winning_number) != 6:
                 raise NotSixError
-            if len(set(winning_number)) != len(winning_number):  
+            if len(set(winning_number)) != len(winning_number):
                 raise RepeatedNumberError
             for number in winning_number:
                 if number < 1 or number > 45:
-                    raise ValueError 
+                    raise ValueError
             return winning_number
         except NotSixError:
             printer_lotto_needs_six()
         except RepeatedNumberError:
             printer_repeated_number_error()
-        except ValueError:  
+        except ValueError:
             printer_lotto_input_error()
 
 
-def get_result(lotto_bought_list, winning_number): #바로 밑의 printer_result 함수를 직관적으로 만드려고 하니 반대로 이쪽이 번잡해졌네요. 마치 풍선효과 ^^..
+def get_result(lotto_bought_list, winning_number):
+
+    #  바로 밑의 printer_result 함수를 직관적으로 만드려고 하니 반대로 이쪽이 번잡해졌네요. 마치 풍선효과 ^^..
     correct_number_counter = {6: 0, 5: 0, 4: 0, 3: 0, 2: 0, 1: 0, 0: 0}
     result = {1: 0, 2: 0, 3: 0, 4: 0}
     for lotto in lotto_bought_list:
@@ -142,7 +148,7 @@ def get_result(lotto_bought_list, winning_number): #바로 밑의 printer_result
     return result
 
 
-def printer_result(result, lotto_bought_number): 
+def printer_result(result, lotto_bought_number):
     delay_time(0.5)
     print("\n> 로또 당첨 결과")
     delay_time(0.5)
