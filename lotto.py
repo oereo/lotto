@@ -32,7 +32,7 @@ def printer_money_input():
     print(PRINTER_MONEY_INPUT_MESSAGE)
 
 
-def printer_nomoney():
+def printer_no_money():
     print(PRINTER_NOMONEY_MESSAGE)
 
 
