@@ -164,8 +164,7 @@ def printer_result(result, lotto_bought_number):
 
 def run():
     lotto_bought_number = buy_lotto()  # 구입할 로또 갯수 구하기
-    lotto_bought_list = pick_lotto_number(
-        lotto_bought_number)  # 구입한 로또 갯수만큼 자동으로 번호 찍기
+    lotto_bought_list = pick_lotto_number(lotto_bought_number)  # 구입한 로또 갯수만큼 자동으로 번호 찍기
     printer_lotto_bought(lotto_bought_number)  # 구입한 로또 갯수 출력하기
     printer_lotto_list(lotto_bought_list)  # 자동으로 찍은 숫자들 출력하기
     winning_number = get_winning_number()  # 당첨 번호 받기
